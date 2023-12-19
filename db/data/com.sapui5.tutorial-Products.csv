@@ -1,0 +1,6 @@
+ID;title;descr;producer_ID;price;stock;contact_ID;rating
+1;"TV";"TV";111;423000;27;1111;4.1
+2;"Notebook";"Slim Power Notebook";222;1594000;9;2222;1.9
+3;"Fridge";"kimchi fridge";333;3254000;2;3333;0.4
+4;"robot vacuum cleaner";"no dust!"; 444;270000;15;4444;3.67
+5;"smartphone";"넓은 화면과 편리한UI"; 555;1200000;55;5555;4.95

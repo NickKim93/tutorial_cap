@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="AdminService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="Products" EntityType="AdminService.Products">
+                    <NavigationPropertyBinding Path="producer" Target="Producer"/>
+                    <NavigationPropertyBinding Path="contact" Target="Contacts"/>
+                    <NavigationPropertyBinding Path="reviews" Target="Reviews"/>
+                </EntitySet>
+                <EntitySet Name="Producer" EntityType="AdminService.Producer">
+                    <NavigationPropertyBinding Path="nationality" Target="Nationality"/>
+                </EntitySet>
+                <EntitySet Name="Nationality" EntityType="AdminService.Nationality"/>
+                <EntitySet Name="Contacts" EntityType="AdminService.Contacts"/>
+                <EntitySet Name="Reviews" EntityType="AdminService.Reviews">
+                    <NavigationPropertyBinding Path="products" Target="Products"/>
+                </EntitySet>
+            </EntityContainer>
+            <EntityType Name="Products">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="title" Type="Edm.String" MaxLength="100"/>
+                <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+                <Property Name="price" Type="Edm.Int32"/>
+                <Property Name="stock" Type="Edm.Int32"/>
+                <NavigationProperty Name="producer" Type="AdminService.Producer">
+                    <OnDelete Action="Cascade"/>
+                    <ReferentialConstraint Property="producer_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="producer_ID" Type="Edm.Int32"/>
+                <NavigationProperty Name="contact" Type="AdminService.Contacts">
+                    <ReferentialConstraint Property="contact_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="contact_ID" Type="Edm.Int32"/>
+                <Property Name="rating" Type="Edm.Decimal" Scale="1" Precision="2"/>
+                <NavigationProperty Name="reviews" Type="Collection(AdminService.Reviews)" Partner="products"/>
+            </EntityType>
+            <EntityType Name="Producer">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="name" Type="Edm.String" MaxLength="100"/>
+                <NavigationProperty Name="nationality" Type="AdminService.Nationality">
+                    <OnDelete Action="Cascade"/>
+                    <ReferentialConstraint Property="nationality_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="nationality_ID" Type="Edm.Int32"/>
+            </EntityType>
+            <EntityType Name="Nationality">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="country" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="Contacts">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="name" Type="Edm.String"/>
+                <Property Name="phone" Type="Edm.String"/>
+                <Property Name="locality" Type="Edm.String"/>
+                <Property Name="country" Type="Edm.String"/>
+                <Property Name="address" Type="Edm.String"/>
+                <Property Name="imageUrl" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="Reviews">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <NavigationProperty Name="products" Type="AdminService.Products" Partner="reviews">
+                    <ReferentialConstraint Property="products_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="products_ID" Type="Edm.Int32"/>
+                <Property Name="rating" Type="Edm.Int32"/>
+                <Property Name="title" Type="Edm.String" MaxLength="100"/>
+                <Property Name="text" Type="Edm.String" MaxLength="1000"/>
+            </EntityType>
+            <Action Name="addReview" IsBound="true">
+                <Parameter Name="in" Type="AdminService.Products"/>
+                <Parameter Name="rating" Type="Edm.Int32"/>
+                <Parameter Name="title" Type="Edm.String"/>
+                <Parameter Name="text" Type="Edm.String"/>
+            </Action>
+            <Annotations Target="AdminService.Contacts/imageUrl">
+                <Annotation Term="UI.IsImageURL" Bool="true"/>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
